@@ -71,3 +71,11 @@ class Chk(APIView):
     chk = User.objects.all()
     serializer = UserSerializer(chk, many=True)
     return Response(serializer.data)
+
+class GetUser(APIView):
+  def get(self, request, param):
+    requester = request.user
+    if (param == requester.usernumber):
+      return Response(UserSerializer(requester, many=True).data)
+    target = User.objects.filter(usernumber=param)
+    return Response(UserSerializer(target, many=True).data)
