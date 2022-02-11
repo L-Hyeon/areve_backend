@@ -1,13 +1,11 @@
-from os import stat
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
 from django.contrib import auth
-from .serializers import UserSerializer
+from .serializers import UserSerializer, OtherUserSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import User
+from core.utils import loginDecorator
 import json
 
 class Signup(APIView):
@@ -38,12 +36,14 @@ class Login(APIView):
       return Response(status=401)
 
 class Logout(APIView):
+  @loginDecorator
   def get(self, request):
     user = request.user
     Token.objects.delete(user=user)
     return Response({"Logout"})
 
 class ChangePassword(APIView):
+  @loginDecorator
   def post(self, request):
     data = json.loads(request.body)
     newPassword = data["newPassword"]
@@ -56,26 +56,16 @@ class ChangePassword(APIView):
     token = Token.objects.create(user=user)
     return Response({"Token": token})
 
-class TokenChk(APIView):
-  def post(self, request):
-    user = request.user
-    token = Token.objects.get(user=user)
-    if (token is None):
-      return Response({"Access Denied"})
-    return Response(status=200)
-
 class Chk(APIView):
   def get(self, request):
-    print(request.user)
-    print(request.auth)
     chk = User.objects.all()
     serializer = UserSerializer(chk, many=True)
     return Response(serializer.data)
 
 class GetUser(APIView):
+  @loginDecorator
   def get(self, request, param):
-    requester = request.user
-    if (param == requester.usernumber):
-      return Response(UserSerializer(requester, many=True).data)
     target = User.objects.filter(usernumber=param)
-    return Response(UserSerializer(target, many=True).data)
+    if (param == request.user.usernumber):
+      return Response(UserSerializer(target, many=True).data)
+    return Response(OtherUserSerializer(target, many=True).data)
