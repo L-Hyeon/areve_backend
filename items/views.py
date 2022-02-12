@@ -31,9 +31,14 @@ class GetItem(APIView):
     return Response(ItemSerializer(target, many=True).data)
 
 class GetItemWithCategory(APIView):
-  def get(self, request, categorynumber, loadnumber):
-    target = Item.objects.filter(category=categorynumber)[12*loadnumber : 12*(loadnumber + 1)]
+  def get(self, request, catNum, pageNum):
+    target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
     return Response(ItemSerializer(target, many=True).data)
+
+  def post(self, request, catNum, pageNum):
+    # 조건을 가진 쿼리
+    target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
+    return Response()
 
 class Chk(APIView):
   def get(self, request):

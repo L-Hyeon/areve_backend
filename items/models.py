@@ -50,6 +50,9 @@ class Item(models.Model):
   price = models.IntegerField(verbose_name="가격", default=0)
   pricePerHour = models.BooleanField(verbose_name="시간당 가격", default=True)
   writer = models.IntegerField("작성자", default=0)
+  views = models.IntegerField("조회수", default=0),
+  rate = models.DecimalField("평점", max_digits=3, decimal_places=2, default=0),
+  like = models.IntegerField("찜한 사람 수", default=0)
 
   objects = ItemManager()
 
