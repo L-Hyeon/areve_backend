@@ -1,3 +1,4 @@
+from unicodedata import category
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import ItemSerializer
@@ -25,13 +26,14 @@ class Apply(APIView):
     return Response("Item Applied")
 
 class GetItem(APIView):
-  def get(self, request, param):
-    target = Item.objects.filter(itemnumber = param)
+  def get(self, request, itemnumber):
+    target = Item.objects.get(itemnumber = itemnumber)
     return Response(ItemSerializer(target, many=True).data)
 
 class GetItemWithCategory(APIView):
-  def get(self, request, param):
-    return Response(ItemSerializer(Item.objects.filter(category=param), many=True).data)
+  def get(self, request, categorynumber, loadnumber):
+    target = Item.objects.filter(category=categorynumber)[12*loadnumber : 12*(loadnumber + 1)]
+    return Response(ItemSerializer(target, many=True).data)
 
 class Chk(APIView):
   def get(self, request):

@@ -64,8 +64,8 @@ class Chk(APIView):
 
 class GetUser(APIView):
   @loginDecorator
-  def get(self, request, param):
-    target = User.objects.filter(usernumber=param)
-    if (param == request.user.usernumber):
+  def get(self, request, usernumber):
+    target = User.objects.get(usernumber=usernumber)
+    if (usernumber == request.user.usernumber):
       return Response(UserSerializer(target, many=True).data)
     return Response(OtherUserSerializer(target, many=True).data)
