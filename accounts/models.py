@@ -36,7 +36,7 @@ class User(AbstractBaseUser):
   nickname = models.CharField(max_length=15, verbose_name="닉네임", unique=True)
   birth = models.DateField(verbose_name="생년월일")
   phonenumber = models.CharField(max_length=11, unique=True, verbose_name="휴대폰 번호")
-  rate = models.DecimalField("평점", max_digits=3, decimal_places=2, default=0)
+  rate = models.FloatField("평점", default=0)
   joindate = models.DateField(auto_now_add=True, editable=False)
   lastLogin = models.DateTimeField(default=datetime.datetime.now,)
   is_active = models.BooleanField(default=True)

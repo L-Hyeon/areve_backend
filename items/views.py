@@ -1,7 +1,7 @@
 from unicodedata import category
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ItemSerializer
+from .serializers import ItemSerializer, ItemSearchSerializer
 from core.utils import loginDecorator
 import json
 from .models import Item
@@ -33,7 +33,7 @@ class GetItem(APIView):
 class GetItemWithCategory(APIView):
   def get(self, request, catNum, pageNum):
     target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
-    return Response(ItemSerializer(target, many=True).data)
+    return Response(ItemSearchSerializer(target, many=True).data)
 
   def post(self, request, catNum, pageNum):
     # 조건을 가진 쿼리
