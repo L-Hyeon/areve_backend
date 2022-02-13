@@ -9,7 +9,7 @@ from .models import Item
 class Apply(APIView):
   @loginDecorator
   def post(self, request):
-    data = json.loads(request.body.decode('base64'))
+    data = json.loads(request.body)
     loc = data["location"] + ' ' + data["detailLoc"]
     item = Item.objects.create_item(
       title = data["title"],
