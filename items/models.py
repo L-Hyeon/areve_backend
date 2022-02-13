@@ -1,18 +1,20 @@
 from django.db import models
 
 class ItemManager(models.Manager):
-  def create_item(self, title, category, content, cntImg, images, location, postcode, price, pricePerHour, writer):
+  def create_item(self, title, category, content, cntImg, images, location, sigungu, postcode, price, pricePerHour, writer):
     if not title:
       raise ValueError('must have title')
     if not category:
       raise ValueError('must have category')
     if not location:
       raise ValueError('must have location')
+    print(images)
     item = self.model(
       title = title,
       category = category,
       content = content,
       location = location,
+      sigungu = sigungu,
       postcode = postcode,
       cntImg = cntImg,
       image1 = images[0],
@@ -47,6 +49,7 @@ class Item(models.Model):
   image8 = models.TextField(verbose_name="이미지8")
   location = models.CharField(max_length=255, verbose_name="위치", default="")
   postcode = models.CharField(max_length=5, verbose_name="우편번호", default="")
+  sigungu = models.CharField(max_length=15, verbose_name="시군구")
   price = models.IntegerField(verbose_name="가격", default=0)
   pricePerHour = models.BooleanField(verbose_name="시간당 가격", default=True)
   writer = models.IntegerField("작성자", default=0)
