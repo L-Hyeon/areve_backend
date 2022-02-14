@@ -27,7 +27,7 @@ class Apply(APIView):
       pricePerHour = data["pricePerHour"],
       writer = request.user.usernumber
     )
-    return Response("Item Applied")
+    return Response(item.usernumber)
 
 class GetItem(APIView):
   def get(self, request, itemnumber):

@@ -31,7 +31,7 @@ class Login(APIView):
       token = Token.objects.get(user=user)
       if (token is None):
         token = Token.objects.create(user=user)
-      return Response({"Token": token})
+      return Response({"Token": token.key})
     else:
       return Response(status=401)
 
