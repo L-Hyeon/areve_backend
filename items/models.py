@@ -8,7 +8,6 @@ class ItemManager(models.Manager):
       raise ValueError('must have category')
     if not location:
       raise ValueError('must have location')
-    print(images)
     item = self.model(
       title = title,
       category = category,

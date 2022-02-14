@@ -7,10 +7,13 @@ import json
 from .models import Item
 
 class Apply(APIView):
-  @loginDecorator
+  #@loginDecorator
   def post(self, request):
     data = json.loads(request.body)
     loc = data["location"] + ' ' + data["detailLoc"]
+    images = data["images"]
+    for i in range(data["cntImg"], 9):
+      images.append('')
     item = Item.objects.create_item(
       title = data["title"],
       category = data["category"],
@@ -19,7 +22,7 @@ class Apply(APIView):
       location = loc,
       sigungu = data["sigungu"],
       cntImg = data["cntImg"],
-      images = data["images"],
+      images = images,
       price = data["price"],
       pricePerHour = data["pricePerHour"],
       writer = request.user.usernumber
