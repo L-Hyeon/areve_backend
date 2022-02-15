@@ -40,7 +40,7 @@ class GetItemWithCategory(APIView):
     return Response(ItemSearchSerializer(target, many=True).data)
 
   def post(self, request, catNum, pageNum):
-    # 조건을 가진 쿼리
+    # 조건을 가진 쿼리문 생성하기
     target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
     return Response()
 
