@@ -12,6 +12,7 @@ class Apply(APIView):
     data = json.loads(request.body)
     loc = data["location"] + ' ' + data["detailLoc"]
     images = data["images"]
+    print(request.user)
     for i in range(data["cntImg"], 9):
       images.append('')
     item = Item.objects.create_item(
@@ -27,7 +28,7 @@ class Apply(APIView):
       pricePerHour = data["pricePerHour"],
       writer = request.user.usernumber
     )
-    return Response(item.usernumber)
+    return Response(item.itemnumber)
 
 class GetItem(APIView):
   def get(self, request, itemnumber):

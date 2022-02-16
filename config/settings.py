@@ -1,13 +1,12 @@
 from pathlib import Path
-
-import os, json
-import django_heroku
+#import django_heroku
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-secret_file = os.path.join(BASE_DIR, 'secrets.json')
+SECRET_KEY = "django-insecure-wdhrnak27x+@=cjff(_yf^v4ja10#hk-8ay%8ls-qh15_7r2@!"
 
-DEBUG = False
+DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
 
 ALLOWED_HOSTS = ['*']
 
@@ -100,4 +99,4 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'accounts.User'
 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
