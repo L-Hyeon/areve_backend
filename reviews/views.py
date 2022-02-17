@@ -1,7 +1,6 @@
-from unicodedata import category
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ItemSerializer, ItemSearchSerializer, ReviewSerializer
+from .serializers import ReviewOverviewSerializer, ReviewSerializer
 from core.utils import loginDecorator
 import json
 from .models import Review
@@ -23,6 +22,11 @@ class WriteReview(APIView):
     return Response(review.reviewnumber)
 
 class GetReview(APIView):
-  def post(self, request, reviewNum):
+  def get(self, request, reviewNum):
     target = Review.objects.get(reviewnumber = reviewNum)
-    return Response(ReviewSerializer(target, many=True).data)
+    return Response(ReviewSerializer(target).data)
+
+class GetReviewOverView(APIView):
+  def get(self, request, userNum):
+    target = Review.objects.filter(writernumber=userNum)
+    return Response(ReviewOverviewSerializer(target, many=True).data)
