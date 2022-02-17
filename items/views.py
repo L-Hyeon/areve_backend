@@ -38,6 +38,8 @@ class GetItem(APIView):
 class GetItemWithCategory(APIView):
   def get(self, request, catNum, pageNum):
     target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
+    if (len(target) == 0):
+      return Response(status=404)
     return Response(ItemSearchSerializer(target, many=True).data)
 
   def post(self, request, catNum, pageNum):
