@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', views.Logout.as_view()),
     path('changePW/', views.ChangePassword.as_view()),
     path('user/<int:usernumber>/', views.GetUser.as_view()),
+    path('user/token', views.GetUserWithToken.as_view()),
 
     #개발 확인용
     path('accounts/chk/', views.Chk.as_view())

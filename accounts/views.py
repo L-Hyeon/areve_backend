@@ -67,5 +67,10 @@ class GetUser(APIView):
   def get(self, request, usernumber):
     target = User.objects.get(usernumber=usernumber)
     if (usernumber == request.user.usernumber):
-      return Response(UserSerializer(target, many=True).data)
-    return Response(OtherUserSerializer(target, many=True).data)
+      return Response(UserSerializer(target).data)
+    return Response(OtherUserSerializer(target).data)
+
+class GetUserWithToken(APIView):
+  def get(self, request):
+    user = request.user
+    return Response(UserSerializer(user).data)

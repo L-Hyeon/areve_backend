@@ -47,6 +47,11 @@ class GetItemWithCategory(APIView):
     target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
     return Response()
 
+class GetItemWithLike(APIView):
+  def get(self, request):
+    target = Item.objects.all().order_by('-like')[:2]
+    return Response(ItemSearchSerializer(target, many=True).data)
+
 class Chk(APIView):
   def get(self, request):
     chk = Item.objects.all()
