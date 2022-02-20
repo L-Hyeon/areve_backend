@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 class ItemManager(models.Manager):
   def create_item(self, title, category, content, cntImg, images, location, sigungu, postcode, price, pricePerHour, writer):
@@ -55,6 +56,8 @@ class Item(models.Model):
   reviews = models.IntegerField("평가 수", default=0)
   rate = models.FloatField("평점", default=0)
   like = models.IntegerField("찜한 사람 수", default=0)
+  uploaded = models.DateTimeField("올린 시간", default=datetime.datetime.now)
+  likedUser = models.TextField("찜한 유저들", default="")
 
   objects = ItemManager()
 

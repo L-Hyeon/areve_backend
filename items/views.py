@@ -47,9 +47,16 @@ class GetItemWithCategory(APIView):
     target = Item.objects.filter(category=catNum)[12*pageNum : 12*(pageNum + 1)]
     return Response()
 
-class GetItemWithLike(APIView):
-  def get(self, request):
-    target = Item.objects.all().order_by('-like')[:2]
+class GetItemInMain(APIView):
+  def get(self, request, param):
+    if (param == 0):
+      target = Item.objects.all().order_by('-like')[:2]
+    elif (param == 1):
+      target = Item.objects.all().order_by('-uploaded')[:2]
+    else:
+      #좋아요 추가 후
+      #target = Item.objects.filter(likedUser=request.user.usernumber)[:2]
+      target = Item.objects.filter(title__icontains="이미지").order_by('-price')[:2]
     return Response(ItemSearchSerializer(target, many=True).data)
 
 class Chk(APIView):
