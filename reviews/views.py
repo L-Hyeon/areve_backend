@@ -26,7 +26,13 @@ class GetReview(APIView):
     target = Review.objects.get(reviewnumber = reviewNum)
     return Response(ReviewSerializer(target).data)
 
-class GetReviewOverView(APIView):
+class GetReviewUserNumber(APIView):
   def get(self, request, userNum):
-    target = Review.objects.filter(writernumber=userNum)
+    target = Review.objects.filter(numWriter=userNum)
+    return Response(ReviewOverviewSerializer(target, many=True).data)
+
+class GetReviewToken(APIView):
+  def get(self, request):
+    user = request.user
+    target = Review.objects.filter(numWriter=user.usernumber)
     return Response(ReviewOverviewSerializer(target, many=True).data)

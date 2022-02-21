@@ -43,6 +43,7 @@ class User(AbstractBaseUser):
   is_admin = models.BooleanField(default=False)
   location = models.TextField(default="", verbose_name="위치")
   postcode = models.CharField(verbose_name="우편번호", default="", max_length=5)
+  like = models.TextField("찜한 아이템 번호", default="")
 
   objects = UserManager()
 

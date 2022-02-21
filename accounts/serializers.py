@@ -5,7 +5,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('usernumber', 'email', 'name', 'nickname', 'birth', 'phonenumber', 'joindate', 'location')
+        fields = ('usernumber', 'email', 'name', 'nickname', 'birth', 'phonenumber', 'joindate', 'location', 'rate')
         #exclude = ('rate', 'lastLogin', 'is_active', 'is_admin','postcode')
 
 class OtherUserSerializer(serializers.ModelSerializer):

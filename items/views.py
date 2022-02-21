@@ -5,6 +5,7 @@ from .serializers import ItemSerializer, ItemSearchSerializer
 from core.utils import loginDecorator
 import json
 from .models import Item
+from django.db.models import Q
 
 class Apply(APIView):
   #@loginDecorator
@@ -54,9 +55,22 @@ class GetItemInMain(APIView):
     elif (param == 1):
       target = Item.objects.all().order_by('-uploaded')[:2]
     else:
-      #좋아요 추가 후
-      #target = Item.objects.filter(likedUser=request.user.usernumber)[:2]
-      target = Item.objects.filter(title__icontains="이미지").order_by('-price')[:2]
+      q = request.user.like.split()
+      if (len(q) == 0):
+        return Response(status=404)
+      if (len(q) == 1):
+        target = Item.objects.get(itemnumber=q[0])
+        return Response(ItemSearchSerializer(target).data)
+      else:
+        target = Item.objects.filter(Q(itemnumber=q[0]) | Q(itemnumber=q[1]))
+    return Response(ItemSearchSerializer(target, many=True).data)
+
+class GetItemUserLiked(APIView):
+  def get(self, request):
+    q = request.user.like.split()
+    target = Item.objects.filter(itemnumber=q[0])
+    for x in q[1:]:
+      target = target.union(Item.objects.filter(itemnumber=x))
     return Response(ItemSearchSerializer(target, many=True).data)
 
 class Chk(APIView):
@@ -64,3 +78,6 @@ class Chk(APIView):
     chk = Item.objects.all()
     serializer = ItemSerializer(chk, many=True)
     return Response(serializer.data)
+
+
+#target = Item.objects.filter(title__icontains="이미지").order_by('-price')[:2]
