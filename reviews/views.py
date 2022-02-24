@@ -4,6 +4,8 @@ from .serializers import ReviewOverviewSerializer, ReviewSerializer
 from core.utils import loginDecorator
 import json
 from .models import Review
+from items.models import Item
+from items.serializers import ItemReviewSerializer, ItemSearchSerializer
 
 class WriteReview(APIView):
   def post(self, request):
@@ -24,7 +26,9 @@ class WriteReview(APIView):
 class GetReview(APIView):
   def get(self, request, reviewNum):
     target = Review.objects.get(reviewnumber = reviewNum)
-    return Response(ReviewSerializer(target).data)
+    item = Item.objects.get(itemnumber=target.numItem)
+    ret = [ReviewSerializer(target).data, ItemReviewSerializer(item).data]
+    return Response(ret)
 
 class GetReviewUserNumber(APIView):
   def get(self, request, userNum):
