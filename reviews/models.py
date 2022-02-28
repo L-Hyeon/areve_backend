@@ -36,6 +36,7 @@ class Review(models.Model):
   image5 = models.TextField(verbose_name="이미지5")
   numItem = models.IntegerField(verbose_name="아이템번호")
   numWriter = models.IntegerField(verbose_name="작성자번호")
+  writerName = models.CharField("작성자 닉네임", default="", max_length=15)
 
   objects = ReviewManager()
 

@@ -58,6 +58,7 @@ class Item(models.Model):
   like = models.IntegerField("찜한 사람 수", default=0)
   uploaded = models.DateTimeField("올린 시간", default=datetime.datetime.now)
   likedUser = models.TextField("찜한 유저들", default="")
+  writerName = models.CharField("작성자 닉네임", default='', max_length=15)
 
   objects = ItemManager()
 
