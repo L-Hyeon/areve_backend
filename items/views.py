@@ -34,7 +34,7 @@ class Apply(APIView):
 class GetItem(APIView):
   def get(self, request, itemnumber):
     target = Item.objects.get(itemnumber = itemnumber)
-    return Response(ItemSerializer(target, many=True).data)
+    return Response(ItemSerializer(target).data)
 
 class GetItemInMain(APIView):
   def get(self, request, param):
