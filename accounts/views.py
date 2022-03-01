@@ -63,11 +63,8 @@ class Chk(APIView):
     return Response(serializer.data)
 
 class GetUser(APIView):
-  @loginDecorator
   def get(self, request, usernumber):
     target = User.objects.get(usernumber=usernumber)
-    if (usernumber == request.user.usernumber):
-      return Response(UserSerializer(target).data)
     return Response(OtherUserSerializer(target).data)
 
 class GetUserWithToken(APIView):

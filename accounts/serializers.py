@@ -6,10 +6,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('usernumber', 'email', 'name', 'nickname', 'birth', 'phonenumber', 'joindate', 'location', 'rate')
-        #exclude = ('rate', 'lastLogin', 'is_active', 'is_admin','postcode')
 
 class OtherUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('usernumber', 'email', 'nickname', 'birth', 'rate', 'joindate', 'location')
-        #exclude = ('name', 'phonenumber', 'lastLogin', 'is_active', 'is_admin', 'postcode')
+        fields = ('usernumber', 'email', 'nickname', 'birth', 'rate', 'joindate', 'location', 'numItemSharing')
