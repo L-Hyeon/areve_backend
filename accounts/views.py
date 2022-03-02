@@ -11,7 +11,6 @@ import json
 class Signup(APIView):
   def post(self, request):
     data = json.loads(request.body.decode('utf-8'))
-    
     user = User.objects.create_user(
       email = data["email"],
       name = data["name"],

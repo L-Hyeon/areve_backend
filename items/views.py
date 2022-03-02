@@ -26,8 +26,11 @@ class Apply(APIView):
       cntImg = data["cntImg"],
       images = images,
       price = data["price"],
-      pricePerHour = data["pricePerHour"],
-      writer = request.user.usernumber
+      pricePerHour = False if (data["pricePerHour"]=="false") else True,
+      writer = request.user.usernumber,
+      writerName=request.user.nickname,
+      startDate=data["startDate"],
+      endDate=data["endDate"]
     )
     return Response(item.itemnumber)
 

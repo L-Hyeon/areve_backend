@@ -2,7 +2,7 @@ from django.db import models
 import datetime
 
 class ItemManager(models.Manager):
-  def create_item(self, title, category, content, cntImg, images, location, sigungu, postcode, price, pricePerHour, writer):
+  def create_item(self, title, category, content, cntImg, images, location, sigungu, postcode, price, pricePerHour, writer, writerName, startDate, endDate):
     if not title:
       raise ValueError('must have title')
     if not category:
@@ -27,7 +27,10 @@ class ItemManager(models.Manager):
       image8 = images[7],
       price = price,
       pricePerHour = pricePerHour,
-      writer = writer
+      writer = writer,
+      writerName = writerName,
+      startDate = startDate,
+      endDate = endDate
     )
 
     item.save()
@@ -59,6 +62,8 @@ class Item(models.Model):
   uploaded = models.DateTimeField("올린 시간", default=datetime.datetime.now)
   likedUser = models.TextField("찜한 유저들", default="")
   writerName = models.CharField("작성자 닉네임", default='', max_length=15)
+  startDate = models.DateField("시간시간", default=datetime.datetime.now)
+  endDate = models.DateField("종료시간", default=datetime.datetime.now)
 
   objects = ItemManager()
 
