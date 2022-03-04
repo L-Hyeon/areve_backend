@@ -9,6 +9,7 @@ urlpatterns = [
     path('item/main/<int:param>', views.GetItemInMain.as_view()),
     path('item/liked', views.GetItemUserLiked.as_view()),
     path('item/<int:pageNum>/search', views.GetItemSearch.as_view()),
+    path('item/similar/<int:itemNum>', views.GetItemSimilar.as_view()),
 
     #개발 확인용
     path('items/chk/', views.Chk.as_view())

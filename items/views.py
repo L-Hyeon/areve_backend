@@ -101,7 +101,6 @@ class GetItemSearch(APIView):
       return Response(ItemSearchSerializer(target).data)
     return Response(ItemSearchSerializer(target, many=True).data)
 
-
 class GetItemUserLiked(APIView):
   def get(self, request):
     q = request.user.like.split()
@@ -115,6 +114,17 @@ class GetItemUserLiked(APIView):
     for x in q[1:]:
       target = target.union(Item.objects.filter(itemnumber=x))
 
+    return Response(ItemSearchSerializer(target, many=True).data)
+
+class GetItemSimilar(APIView):
+  def get(self, request, itemNum):
+    original = Item.objects.get(itemnumber=itemNum)
+    originalSigungu = original.sigungu
+    originalCategory = original.category
+    target = Item.objects.filter(Q(category=originalCategory) & Q(sigungu=originalSigungu))
+    print(len(target))
+    if (len(target) > 3):
+      target = target[:3]
     return Response(ItemSearchSerializer(target, many=True).data)
 
 class Chk(APIView):
