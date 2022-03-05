@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import User
+from items.models import Item
 from core.utils import loginDecorator
 import json
 
@@ -54,6 +55,17 @@ class ChangePassword(APIView):
     Token.objects.delete(user=user)
     token = Token.objects.create(user=user)
     return Response({"Token": token})
+
+class Like(APIView):
+  @loginDecorator
+  def get(self, request, itemNum):
+    user = request.user
+    item = Item.objects.get(itemnumber=itemNum)
+    item.like += 1
+    item.save()
+    user.like += str(itemNum) + ' '
+    user.save()
+    return Response(status=200)
 
 class Chk(APIView):
   def get(self, request):
