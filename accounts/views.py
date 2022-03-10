@@ -39,7 +39,8 @@ class Logout(APIView):
   @loginDecorator
   def get(self, request):
     user = request.user
-    Token.objects.delete(user=user)
+    token = Token.objects.get(user=user)
+    token.delete()
     return Response({"Logout"})
 
 class ChangePassword(APIView):
@@ -52,9 +53,10 @@ class ChangePassword(APIView):
     user.save()
     
     #Change Token
-    Token.objects.delete(user=user)
+    token = Token.objects.get(user=user)
+    token.delete()
     token = Token.objects.create(user=user)
-    return Response({"Token": token})
+    return Response({"Token": token.key})
 
 class Like(APIView):
   @loginDecorator

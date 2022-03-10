@@ -42,18 +42,20 @@ class GetItem(APIView):
 class GetItemInMain(APIView):
   def get(self, request, param):
     if (param == 0):
-      target = Item.objects.all().order_by('-like')[:2]
+      target = Item.objects.all().order_by('-like')[:3]
     elif (param == 1):
-      target = Item.objects.all().order_by('-uploaded')[:2]
+      target = Item.objects.all().order_by('-uploaded')[:3]
     else:
       q = request.user.like.split()
       if (len(q) == 0):
         return Response(status=404)
-      if (len(q) == 1):
+      elif (len(q) == 1):
         target = Item.objects.get(itemnumber=q[0])
         return Response(ItemSearchSerializer(target).data)
-      else:
+      elif (len(q) == 2):
         target = Item.objects.filter(Q(itemnumber=q[0]) | Q(itemnumber=q[1]))
+      else:
+        target = Item.objects.filter(Q(itemnumber=q[0]) | Q(itemnumber=q[1]) | Q(itemnumber=q[2]))
     
     if (len(target) == 1):
       return Response(ItemSearchSerializer(target).data)
