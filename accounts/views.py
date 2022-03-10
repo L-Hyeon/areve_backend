@@ -21,7 +21,7 @@ class Signup(APIView):
       password = data["password"]
     )
     token = Token.objects.create(user=user)
-    return Response({"Token": token.key})
+    return Response({"Token": token.key, "Like": user.like})
 
 class Login(APIView):
   def post(self, request):
@@ -31,7 +31,7 @@ class Login(APIView):
       token = Token.objects.get(user=user)
       if (token is None):
         token = Token.objects.create(user=user)
-      return Response({"Token": token.key})
+      return Response({"Token": token.key, "Like": user.like})
     else:
       return Response(status=401)
 
@@ -67,7 +67,26 @@ class Like(APIView):
     item.save()
     user.like += str(itemNum) + ' '
     user.save()
-    return Response(status=200)
+    return Response({"Like": user.like})
+
+class Dislike(APIView):
+  @loginDecorator
+  def get(self, request, itemNum):
+    user = request.user
+    item = Item.objects.get(itemnumber=itemNum)
+    item.like -= 1
+    item.save()
+    like = user.like.split()
+    print(like, itemNum)
+    try:
+      like.remove(str(itemNum))
+      print(like)
+      user.like = ' '.join(like) + ' '
+      user.save()
+      print(user.like)
+      return Response({"Like": user.like})
+    except:
+      return Response(status=404, data={"msg": "Already Deleted"})
 
 class Chk(APIView):
   def get(self, request):
