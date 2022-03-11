@@ -1,6 +1,7 @@
-from unicodedata import category
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from orders.models import Order
 from .serializers import ItemSerializer, ItemSearchSerializer
 from core.utils import loginDecorator
 import json
@@ -8,12 +9,11 @@ from .models import Item
 from django.db.models import Q
 
 class Apply(APIView):
-  #@loginDecorator
+  @loginDecorator
   def post(self, request):
     data = json.loads(request.body)
     loc = data["location"] + ' ' + data["detailLoc"]
     images = data["images"]
-    print(request.user)
     for i in range(data["cntImg"], 9):
       images.append('')
     item = Item.objects.create_item(
@@ -119,18 +119,40 @@ class GetItemSimilar(APIView):
     originalSigungu = original.sigungu
     originalCategory = original.category
     target = Item.objects.filter(Q(category=originalCategory) & Q(sigungu=originalSigungu))
-    print(len(target))
     if (len(target) > 3):
       target = target[:3]
     return Response(ItemSearchSerializer(target, many=True).data)
 
+class GetItemApplied(APIView):
+  def get(self, request, userNum = None):
+    if (userNum):
+      target = Item.objects.filter(writer = userNum)
+    else:
+      target = Item.objects.filter(writer = request.user.usernumber)
+    
+    if (len(target) == 1):
+      return Response(ItemSearchSerializer(target).data)
+    return Response(ItemSearchSerializer(target, many=True).data)
+
+class GetItemOrdered(APIView):
+  def get(self, request):
+    user = request.user
+    orders = Order.objects.filter(buyer = request.user.usernumber)
+    if (not orders):
+      return Response(status=404)
+    target = []
+    for e in orders:
+      target.append(Item.objects.get(itemnumber = e.itemnumber))
+    return Response(ItemSearchSerializer(target, many=True).data)
+
 class Chk(APIView):
   def get(self, request):
-    #chk = Item.objects.all()
+    chk = Item.objects.all()
     #serializer = ItemSerializer(chk, many=True)
-    target = Item.objects.filter(Q(title__icontains="1"))
-    q2 = Item.objects.filter(title__icontains="3")
-    #target = Item.objects.filter(title__icontains="3")
-    return Response(ItemSearchSerializer(target.union(q2), many=True).data)
-
+    #target = Item.objects.filter(Q(title__icontains="1"))
+    #q2 = Item.objects.filter(title__icontains="3")
+    #return Response(ItemSearchSerializer(target.union(q2), many=True).data)
+    for e in chk:
+      print(e.itemnumber)
+    return Response(ItemSearchSerializer(chk, many=True).data)
 

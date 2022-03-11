@@ -10,6 +10,9 @@ urlpatterns = [
     path('item/liked', views.GetItemUserLiked.as_view()),
     path('item/<int:pageNum>/search', views.GetItemSearch.as_view()),
     path('item/similar/<int:itemNum>', views.GetItemSimilar.as_view()),
+    path('item/applied/<int:userNum>', views.GetItemApplied.as_view()),
+    path('item/applied', views.GetItemApplied.as_view()),
+    path('item/ordered', views.GetItemOrdered.as_view()),
 
     #개발 확인용
     path('items/chk/', views.Chk.as_view())
