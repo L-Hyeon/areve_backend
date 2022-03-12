@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from orders.models import Order
+from orders.serializers import OrderSerializer
 from .serializers import ItemSerializer, ItemSearchSerializer
 from core.utils import loginDecorator
 import json
@@ -42,21 +43,20 @@ class GetItem(APIView):
 class GetItemInMain(APIView):
   def get(self, request, param):
     if (param == 0):
-      target = Item.objects.all().order_by('-like')[:3]
+      target = Item.objects.all().order_by('-like')[:4]
     elif (param == 1):
-      target = Item.objects.all().order_by('-uploaded')[:3]
+      target = Item.objects.all().order_by('-uploaded')[:4]
     else:
       q = request.user.like.split()
       if (len(q) == 0):
         return Response(status=404)
-      elif (len(q) == 1):
-        target = Item.objects.get(itemnumber=q[0])
-        return Response(ItemSearchSerializer(target).data)
-      elif (len(q) == 2):
-        target = Item.objects.filter(Q(itemnumber=q[0]) | Q(itemnumber=q[1]))
+      target = []
+      for e in q:
+        target.append(Item.objects.get(itemnumber=e))
+      if (len(target) < 4):
+        return Response(ItemSearchSerializer(target, many=True).data)
       else:
-        target = Item.objects.filter(Q(itemnumber=q[0]) | Q(itemnumber=q[1]) | Q(itemnumber=q[2]))
-    
+        return Response(ItemSearchSerializer(target[:4], many=True).data)
     if (len(target) == 1):
       return Response(ItemSearchSerializer(target).data)
     return Response(ItemSearchSerializer(target, many=True).data)
@@ -142,8 +142,9 @@ class GetItemOrdered(APIView):
       return Response(status=404)
     target = []
     for e in orders:
-      target.append(Item.objects.get(itemnumber = e.itemnumber))
-    return Response(ItemSearchSerializer(target, many=True).data)
+      i = Item.objects.get(itemnumber = e.itemnumber)
+      target.append((ItemSearchSerializer(i).data, OrderSerializer(e).data))
+    return Response(target)
 
 class Chk(APIView):
   def get(self, request):

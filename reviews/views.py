@@ -6,22 +6,29 @@ import json
 from .models import Review
 from items.models import Item
 from items.serializers import ItemReviewSerializer
+from orders.models import Order
 
 class WriteReview(APIView):
+  @loginDecorator
   def post(self, request):
     data = json.loads(request.body)
     images = data["images"]
     for i in range(data["cntImg"], 6):
-      images += ['']
+      images.append('')
     review = Review.objects.create_review(
       score = data["score"],
       content = data["content"],
       cntImg = data["cntImg"],
       images = images,
       numItem = data["itemnumber"],
-      numWriter = data["usernumber"],
-      writerName = data["username"]
+      numWriter = request.user.usernumber,
+      nameWriter = request.user.name,
+      numOrder = data["ordernumber"]
     )
+    order = Order.objects.get(ordernumber=data["ordernumber"])
+    if (order): print(1)
+    order.reviewWritten = True
+    order.save()
     return Response(review.reviewnumber)
 
 class GetReview(APIView):

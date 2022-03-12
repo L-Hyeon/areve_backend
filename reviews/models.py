@@ -1,13 +1,7 @@
 from django.db import models
 
 class ReviewManager(models.Manager):
-  def create_review(self, score, content, cntImg, images, numItem, numWriter):
-    if not score:
-      raise ValueError('must have score')
-    if not numItem:
-      raise ValueError('must have itemnumber')
-    if not numWriter:
-      raise ValueError('must have writer')
+  def create_review(self, score, content, cntImg, images, numItem, numWriter, nameWriter, numOrder):
     review = self.model(
       score = score,
       content = content,
@@ -18,7 +12,9 @@ class ReviewManager(models.Manager):
       image4 = images[3],
       image5 = images[4],
       numItem = numItem,
-      numWriter = numWriter
+      numWriter = numWriter,
+      nameWriter = nameWriter,
+      numOrder = numOrder
     )
 
     review.save()
@@ -36,7 +32,8 @@ class Review(models.Model):
   image5 = models.TextField(verbose_name="이미지5")
   numItem = models.IntegerField(verbose_name="아이템번호")
   numWriter = models.IntegerField(verbose_name="작성자번호")
-  writerName = models.CharField("작성자 닉네임", default="", max_length=15)
+  numOrder = models.IntegerField("주문번호", default=-1)
+  nameWriter = models.CharField("작성자 닉네임", default="", max_length=15)
 
   objects = ReviewManager()
 

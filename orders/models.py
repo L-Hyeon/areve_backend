@@ -31,6 +31,7 @@ class Order(models.Model):
   buyerPhone = models.TextField("구매자 휴대폰번호")
   buyerEmail = models.TextField("구매자 이메일")
   buyerDemand = models.TextField("구매자 요청사항")
+  reviewWritten = models.BooleanField("리뷰 작성 여부", default=False)
   confirmTime = models.DateTimeField("확정시간", default=datetime.datetime.now)
 
   objects = OrderManager()
