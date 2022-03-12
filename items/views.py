@@ -98,19 +98,18 @@ class GetItemSearch(APIView):
       return Response(ItemSearchSerializer(target).data)
     return Response(ItemSearchSerializer(target, many=True).data)
 
-class GetItemUserLiked(APIView):
-  def get(self, request):
+class GetItemLiked(APIView):
+  def get(self, request, pageNum):
     q = request.user.like.split()
     if (not q):
       return Response(status=404)
-
-    target = Item.objects.filter(itemnumber=q[0])
-    if (len(target) == 1):
-      return Response(ItemSearchSerializer(target).data)
-
-    for x in q[1:]:
-      target = target.union(Item.objects.filter(itemnumber=x))
-
+    target = []
+    print(q)
+    for e in q:
+      target.append(Item.objects.get(itemnumber=e))
+    target = target[12*pageNum : 12*(pageNum + 1)]
+    if (len(target) == 0):
+      return Response(status=404)
     return Response(ItemSearchSerializer(target, many=True).data)
 
 class GetItemSimilar(APIView):
@@ -124,12 +123,15 @@ class GetItemSimilar(APIView):
     return Response(ItemSearchSerializer(target, many=True).data)
 
 class GetItemApplied(APIView):
-  def get(self, request, userNum = None):
+  def get(self, request, pageNum, userNum = None):
     if (userNum):
       target = Item.objects.filter(writer = userNum)
     else:
       target = Item.objects.filter(writer = request.user.usernumber)
     
+    target = target[12*pageNum : 12*(pageNum + 1)]
+    if (len(target) == 0):
+      return Response(status=404)
     if (len(target) == 1):
       return Response(ItemSearchSerializer(target).data)
     return Response(ItemSearchSerializer(target, many=True).data)

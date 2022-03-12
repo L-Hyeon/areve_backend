@@ -46,6 +46,7 @@ class User(AbstractBaseUser):
   sigungu = models.CharField(max_length=15, verbose_name="시군구", default="")
   like = models.TextField("찜한 아이템 번호", default="")
   numItemSharing = models.IntegerField("판매중인 아이템 수", default=0)
+  numWrittenReview = models.IntegerField("작성 리뷰 수", default=0)
 
   objects = UserManager()
 

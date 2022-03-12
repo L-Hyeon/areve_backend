@@ -29,6 +29,9 @@ class WriteReview(APIView):
     if (order): print(1)
     order.reviewWritten = True
     order.save()
+    user = request.user
+    user.numWrittenReview += 1
+    user.save()
     return Response(review.reviewnumber)
 
 class GetReview(APIView):
