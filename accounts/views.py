@@ -88,12 +88,6 @@ class Dislike(APIView):
     except:
       return Response(status=404, data={"msg": "Already Deleted"})
 
-class Chk(APIView):
-  def get(self, request):
-    chk = User.objects.all()
-    serializer = UserSerializer(chk, many=True)
-    return Response(serializer.data)
-
 class GetUser(APIView):
   def get(self, request, usernumber):
     target = User.objects.get(usernumber=usernumber)
@@ -103,3 +97,13 @@ class GetUserWithToken(APIView):
   def get(self, request):
     user = request.user
     return Response(UserSerializer(user).data)
+
+class SetUserLocation(APIView):
+  def post(self, request):
+    data = json.loads(request.body)
+    user = request.user
+    user.location = data["location"]
+    user.postcode = data["postcode"]
+    user.sigungu = data["sigungu"]
+    user.save()
+    return Response({"loc": user.location, "po": user.postcode, "si": user.sigungu})
