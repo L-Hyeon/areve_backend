@@ -11,9 +11,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ReviewOverviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('score', 'reviewnumber', 'content')
+        fields = ('score', 'nameWriter', 'content')
 
 class ReviewForItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('score', 'reviewnumber', 'content', 'writerName', 'numWriter')
+        fields = ('score', 'reviewnumber', 'content', 'nameWriter', 'numWriter')
