@@ -18,7 +18,10 @@ class Signup(APIView):
       nickname = data["nickname"],
       birth = data["birth"],
       phonenumber = data["phone"],
-      password = data["password"]
+      password = data["password"],
+      location = data["location"],
+      sigungu = data["sigungu"],
+      postcode = data["postcode"]
     )
     token = Token.objects.create(user=user)
     return Response({"Token": token.key, "Like": user.like})

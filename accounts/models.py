@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 
 class UserManager(BaseUserManager):
-  def create_user(self, email, password, birth, phonenumber, nickname, name):
+  def create_user(self, email, password, birth, phonenumber, nickname, name, location, sigungu, postcode):
     if not email:
       raise ValueError('must have user email')
     if not nickname:
@@ -17,6 +17,9 @@ class UserManager(BaseUserManager):
       nickname= nickname,
       phonenumber = phonenumber,
       birth = birth,
+      location = location,
+      sigungu = sigungu,
+      postcode = postcode
     )
 
     user.set_password(password)
