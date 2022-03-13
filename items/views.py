@@ -43,9 +43,9 @@ class GetItem(APIView):
 class GetItemInMain(APIView):
   def get(self, request, param):
     if (param == 0):
-      target = Item.objects.all().order_by('-like')[:4]
+      target = Item.objects.all().order_by('-like')[:2]
     elif (param == 1):
-      target = Item.objects.all().order_by('-uploaded')[:4]
+      target = Item.objects.all().order_by('-uploaded')[:2]
     else:
       q = request.user.like.split()
       if (len(q) == 0):
@@ -53,10 +53,9 @@ class GetItemInMain(APIView):
       target = []
       for e in q:
         target.append(Item.objects.get(itemnumber=e))
-      if (len(target) < 4):
-        return Response(ItemSearchSerializer(target, many=True).data)
-      else:
-        return Response(ItemSearchSerializer(target[:4], many=True).data)
+        if (len(target) == 2):
+          break
+      return Response(ItemSearchSerializer(target, many=True).data)
     if (len(target) == 1):
       return Response(ItemSearchSerializer(target).data)
     return Response(ItemSearchSerializer(target, many=True).data)

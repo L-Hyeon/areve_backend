@@ -7,6 +7,7 @@ from .models import Review
 from items.models import Item
 from items.serializers import ItemReviewSerializer
 from orders.models import Order
+from accounts.models import User
 
 class WriteReview(APIView):
   @loginDecorator
@@ -32,6 +33,17 @@ class WriteReview(APIView):
     user = request.user
     user.numWrittenReview += 1
     user.save()
+
+    item = Item.objects.get(itemnumber=data["itemnumber"])
+    user = User.objects.get(usernumber=item.writer)
+    cnt = 0
+    for i in Item.objects.filter(writer=user.usernumber):
+      cnt += i.reviews
+    preRate = user.rate*cnt
+    user.rate = (preRate + data["score"])/(cnt + 1)
+    user.save()
+    item.reviews += 1
+    item.save()
     return Response(review.reviewnumber)
 
 class GetReview(APIView):
@@ -51,10 +63,14 @@ class GetReviewUserNumber(APIView):
 class GetReviewToken(APIView):
   def get(self, request):
     user = request.user
-    target = Review.objects.filter(numWriter=user.usernumber)
-    if (len(target) == 1):
-      return Response(ReviewOverviewSerializer(target).data)
-    return Response(ReviewOverviewSerializer(target, many=True).data)
+    applied = Item.objects.filter(writer=user.usernumber)
+    reviews = []
+    for e in applied:
+      for r in Review.objects.filter(numItem=e.itemnumber):
+        reviews.append(r)
+    if (not reviews):
+      return Response({})
+    return Response(ReviewOverviewSerializer(reviews, many=True).data)
 
 class GetReviewItemNumber(APIView):
   def get(self, request, itemNum, order):
