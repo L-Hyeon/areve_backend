@@ -36,14 +36,17 @@ class Apply(APIView):
     return Response(item.itemnumber)
 
 class ModifyItem(APIView):
+  @loginDecorator
   def post(self, request, itemNum):
+    item = Item.objects.get(itemnumber=itemNum)
+    if (request.user.usernumber != item.writer):
+      return Response(status=400)
+    item.delete()
     data = json.loads(request.body)
     loc = data["location"] + ' ' + data["detailLoc"]
     images = data["images"]
     for i in range(data["cntImg"], 9):
       images.append('')
-    item = Item.objects.get(itemnumber=itemNum)
-    item.delete()
     item = Item.objects.create_item(
       title = data["title"],
       category = data["category"],

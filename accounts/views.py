@@ -24,7 +24,7 @@ class Signup(APIView):
       postcode = data["postcode"]
     )
     token = Token.objects.create(user=user)
-    return Response({"Token": token.key, "Like": user.like})
+    return Response({"Token": token.key, "Like": user.like, "Sigungu": user.sigungu})
 
 class Login(APIView):
   def post(self, request):
@@ -34,7 +34,7 @@ class Login(APIView):
       token = Token.objects.get(user=user)
       if (token is None):
         token = Token.objects.create(user=user)
-      return Response({"Token": token.key, "Like": user.like})
+      return Response({"Token": token.key, "Like": user.like, "Sigungu": user.sigungu})
     else:
       return Response(status=401)
 
