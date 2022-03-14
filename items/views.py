@@ -136,12 +136,22 @@ class GetItemLiked(APIView):
       upper = int(upper)
       target = target.intersection(Item.objects.filter(Q(price__gte=lower) & Q(price__lte=upper)))
     elif (lower):
+      lower = int(lower)
       target = target.intersection(Item.objects.filter(price__gte=lower))
     elif (upper):
+      upper = int(upper)
       target = target.intersection(Item.objects.filter(price__lte=upper))
     
     if (start and end):
-      target = target.intersection(Item.objects.filter(Q(price__gte=lower) & Q(price__lte=upper)))
+      start = start.replace('.', '').replace(' ', '-')
+      end = end.replace('.', '').replace(' ', '-')
+      target = target.intersection(Item.objects.filter(Q(startDate__lte=start) & Q(endDate__gte=end)))
+    elif (start):
+      start = start.replace('.', '').replace(' ', '-')
+      target = target.intersection(Item.objects.filter(Q(startDate__gte=start) | Q(endDate__gte=start)))
+    elif (end):
+      end = end.replace('.', '').replace(' ', '-')
+      target = target.intersection(Item.objects.filter(Q(startDate__lte=end) | Q(endDate__gte=end)))
     
     if (location):
       target = target.intersection(Item.objects.filter(location__icontains=location))
