@@ -35,6 +35,43 @@ class Apply(APIView):
     )
     return Response(item.itemnumber)
 
+class ModifyItem(APIView):
+  def post(self, request, itemNum):
+    data = json.loads(request.body)
+    loc = data["location"] + ' ' + data["detailLoc"]
+    images = data["images"]
+    for i in range(data["cntImg"], 9):
+      images.append('')
+    item = Item.objects.get(itemnumber=itemNum)
+    item.delete()
+    item = Item.objects.create_item(
+      title = data["title"],
+      category = data["category"],
+      content = data["content"],
+      postcode = data["postcode"],
+      location = loc,
+      sigungu = data["sigungu"],
+      cntImg = data["cntImg"],
+      images = images,
+      price = data["price"],
+      pricePerHour = False if (data["pricePerHour"]=="false") else True,
+      writer = request.user.usernumber,
+      writerName=request.user.nickname,
+      startDate=data["startDate"],
+      endDate=data["endDate"]
+    )
+    Response(item.itemnumber)
+
+class DeleteItem(APIView):
+  @loginDecorator
+  def get(self, request, itemNum):
+    user = request.user
+    item = Item.objects.get(itemnumber=itemNum)
+    if (item.writer != user.usernumber):
+      return Response(status=400)
+    item.delete()
+    return Response(status=200)
+
 class GetItem(APIView):
   def get(self, request, itemnumber):
     target = Item.objects.get(itemnumber = itemnumber)
@@ -191,7 +228,6 @@ class GetItemApplied(APIView):
 
 class GetItemOrdered(APIView):
   def get(self, request):
-    user = request.user
     orders = Order.objects.filter(buyer = request.user.usernumber)
     if (not orders):
       return Response(status=404)

@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path('apply/', views.Apply.as_view()),
+    path('modify/<int:itemNum>', views.ModifyItem.as_view()),
+    path('delete/<int:itemNum>', views.DeleteItem.as_view()),
     path('item/<int:itemnumber>/', views.GetItem.as_view()),
     path('item/main/<int:param>', views.GetItemInMain.as_view()),
     path('item/liked/<int:pageNum>', views.GetItemLiked.as_view()),
