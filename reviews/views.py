@@ -55,10 +55,15 @@ class GetReview(APIView):
 
 class GetReviewUserNumber(APIView):
   def get(self, request, userNum):
-    target = Review.objects.filter(numWriter=userNum)
-    if (len(target) == 1):
-      return Response(ReviewOverviewSerializer(target).data)
-    return Response(ReviewOverviewSerializer(target, many=True).data)
+    user = User.objects.get(usernumber=userNum)
+    applied = Item.objects.filter(writer=user.usernumber)
+    reviews = []
+    for e in applied:
+      for r in Review.objects.filter(numItem=e.itemnumber):
+        reviews.append(r)
+    if (not reviews):
+      return Response({})
+    return Response(ReviewOverviewSerializer(reviews, many=True).data)
 
 class GetReviewToken(APIView):
   def get(self, request):
